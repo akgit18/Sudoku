@@ -26,7 +26,7 @@ td {
   color: #ff9900;
   background-color: #1da31b;
 }
-button {
+button, select {
   width: 130px;
   height: 45px;
   padding: 10px;
@@ -38,16 +38,9 @@ button {
   font-weight: bold;
   transition-duration: 0.4s;
 }
-button:hover {
+button:hover, select:hover {
   color: #bfbfbf;
   background-color: #f2f2f2;
-}
-select {
-  width: 140px;
-  height: 40px;
-  cursor: pointer;
-  font-size: 20px;
-  font-weight: bold;
 }
 input {
   width: 49px;

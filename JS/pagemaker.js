@@ -5,10 +5,8 @@ const inpStringLightGrey = "<input inputmode='numeric' size='1' maxlength='1' au
 const inpStringDarkGrey = "<input inputmode='numeric' size='1' maxlength='1' autocomplete='off' class='dg'>";
 let inpPicker = false;
 const table = document.getElementById("board");
-let t = document.getElementById("Theme");
+const t = document.getElementById("Theme");
 let theme = t.options[t.selectedIndex].value;
-//console.log(t.options[t.selectedIndex].value);
-
 function inpPick() {
   if (theme == 1) {
     if (inpPicker) {
@@ -51,7 +49,6 @@ function boardclear() {
 }
 
 function reTheme() {
-  t = document.getElementById("Theme");
   theme = t.options[t.selectedIndex].value;
   boardclear();
 }

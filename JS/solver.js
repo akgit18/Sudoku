@@ -5,7 +5,7 @@ function solve1() {
     throw new Error("Inputted board not valid.");
   }
   if (sq = nextEmptySpace(board)) {
-    solved = solveHelper(board, sq[0], sq[1]);
+    let solved = solveHelper(board, sq[0], sq[1]);
     if (solved) {
       return solved;
     } else {
@@ -77,8 +77,8 @@ function isLegalSpace(board, i, j) {
         return false;
       }
     }
-    iFloor = Math.floor(i/_size) * _size;
-    jFloor = Math.floor(j/_size) * _size;
+    let iFloor = Math.floor(i/_size) * _size;
+    let jFloor = Math.floor(j/_size) * _size;
     for (m = 0; m < _size; m++) {
       for (n = 0; n < _size; n++) {
         if ((m + iFloor != i) || (n + jFloor != j)) {
