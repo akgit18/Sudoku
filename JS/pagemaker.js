@@ -1,25 +1,15 @@
 let _size = 3;
-const inpStringOrange = "<input inputmode='numeric' size='1' maxlength='1' autocomplete='off' class='o'>";
-const inpStringGreen = "<input inputmode='numeric' size='1' maxlength='1' autocomplete='off' class='g'>";
-const inpStringLightGrey = "<input inputmode='numeric' size='1' maxlength='1' autocomplete='off' class='lg'>";
-const inpStringDarkGrey = "<input inputmode='numeric' size='1' maxlength='1' autocomplete='off' class='dg'>";
+const inpStringC1 = "<input inputmode='numeric' size='1' maxlength='1' autocomplete='off' class='col1'>";
+const inpStringC2 = "<input inputmode='numeric' size='1' maxlength='1' autocomplete='off' class='col2'>";
 let inpPicker = false;
 const table = document.getElementById("board");
 const t = document.getElementById("Theme");
 let theme = t.options[t.selectedIndex].value;
 function inpPick() {
-  if (theme == 1) {
-    if (inpPicker) {
-      return inpStringLightGrey;
-    } else {
-      return inpStringDarkGrey;
-    }
-  } else if (theme == 2) {
-    if (inpPicker) {
-      return inpStringOrange;
-    } else {
-      return inpStringGreen;
-    }
+  if (inpPicker) {
+    return inpStringC1;
+  } else {
+    return inpStringC2;
   }
 }
 
@@ -50,7 +40,8 @@ function boardclear() {
 
 function reTheme() {
   theme = t.options[t.selectedIndex].value;
-  boardclear();
+  document.getElementById("themesheet").href = theme;
+  //boardclear();
 }
 
 function reSize() {

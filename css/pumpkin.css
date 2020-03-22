@@ -1,0 +1,17 @@
+.col1 {
+  color: #ff9900;
+  background-color: #1da31b;
+}
+.col2 {
+  background-color: #ff9900;
+  color: #1da31b;
+}
+button, select {
+  background-color: #1da31b;
+  color: #ff9900;
+  border: 2px solid #1da31b;
+}
+button:hover, select:hover {
+  color: #1da31b;
+  background-color: #ff9900;
+}

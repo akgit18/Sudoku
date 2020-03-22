@@ -3,7 +3,8 @@
   <head>
     <meta charset="utf-8">
     <title>Sudoku</title>
-    <link rel="stylesheet" href="./Sudoku.css">
+    <link rel="stylesheet" href="./css/Sudoku.css">
+    <link id="themesheet" rel="stylesheet" title="theme" href="./css/formal.css">
   </head>
   <body onload="boardgen()">
     <noscript>
@@ -20,10 +21,10 @@
         Clear
       </button>
       <select name="Theme" id="Theme" onChange="reTheme()">
-        <option value="1" selected="selected">Formal</option>
-        <option value="2">Pumpkin</option>
+        <option value="./css/formal.css" selected="selected">Formal</option>
+        <option value="./css/pumpkin.css">Pumpkin</option>
       </select>
-      <select class="" name="Size" id="Size" onChange="reSize()">
+      <select name="Size" id="Size" onChange="reSize()">
         <option type="number" value="2">2</option>
         <option type="number" value="3" selected="selected">3</option>
         <!--<option type="number" value="4">4</option>
