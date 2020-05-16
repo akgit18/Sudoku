@@ -1,3 +1,5 @@
+var rules = [rowcolumn, boxrule]; //active rules
+
 //solves a 2-d Sudoku array (backtracking method)
 function solve1() {
   let board = getBoard();
@@ -32,7 +34,7 @@ function solveHelper(prevBoard, i, j) {
       }
     }
   }
-  prevBoard[i][j] = 0;
+  prevBoard[i][j] = -1;
   return false;
 }
 
@@ -48,7 +50,7 @@ function getBoard() {
       if (cell > 0) {
         boardrow.push(Number(cell));
       } else {
-        boardrow.push(0);
+        boardrow.push(-1);
       }
     }
     board.push(boardrow);
@@ -72,7 +74,7 @@ function isLegalAll(board) {
 function isLegalSpace(board, i, j) {
   let val = board[i][j];
   if (val > 0) {
-    for (k = 0; k < (_size * _size); k++) {
+    /*for (k = 0; k < (_size * _size); k++) {
       if (((val == board[k][j]) && k != i) || ((val == board[i][k])) && k != j) {
         return false;
       }
@@ -87,9 +89,75 @@ function isLegalSpace(board, i, j) {
           }
         }
       }
+    }*/
+    for (let r = 0; r < rules.length; r++) {
+      if (!rules[r](board, i, j, val)) {
+        return false;
+      }
     }
   }
   return true;
+}
+
+//basic rules
+function rowcolumn(board, i, j, val) {
+  for (let k = 0; k < (_size * _size); k++) {
+    if (((val == board[k][j]) && k != i) || ((val == board[i][k])) && k != j) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function boxrule(board, i, j, val) {
+  let iFloor = Math.floor(i/_size) * _size;
+  let jFloor = Math.floor(j/_size) * _size;
+  for (let m = 0; m < _size; m++) {
+    for (let n = 0; n < _size; n++) {
+      if ((m + iFloor != i) || (n + jFloor != j)) {
+        if (board[m + iFloor][n + jFloor] == board[i][j]) {
+          return false;
+        }
+      }
+    }
+  }
+  return true;
+}
+
+//additional rules
+function knightsmove(board, i, j, val) {
+  let dx = [-2, -2, -1, -1, 1, 1, 2, 2];
+  let dy = [-1, 1, -2, 2, -2, 2, -1, 1];
+  for (let k = 0; k < 8; k++) {
+    let x = i + dx[k];
+    let y = j + dy[k];
+    if (0 < x && x < _size**2 && 0 < y && y < _size**2) {
+      if (val == board[x][y]) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+function kingsmove(board, i, j, val) {
+  
+}
+
+function toggleRule(checkbox, val) {
+  let tog;
+  if (checkbox.checked) {
+    tog = function (r) {rules.push(r)};
+  } else {
+    tog = function (r) {rules.splice(rules.indexOf(r))};
+  }
+  switch (val) {
+    case "1":
+      tog(knightsmove)
+      break;
+    default:
+      alert("Uh-oh! Something broke!");
+  }
 }
 
 //finds the next empty square, and returns its coordinates
@@ -97,7 +165,7 @@ function isLegalSpace(board, i, j) {
 function nextEmptySpace(board) {
   for (i = 0; i < (_size ** 2); i++) {
     for (j = 0; j < (_size ** 2); j++) {
-      if (!board[i][j]) {
+      if (board[i][j] < 1) {
         return [i, j];
       }
     }
