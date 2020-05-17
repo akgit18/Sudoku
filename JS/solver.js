@@ -90,7 +90,7 @@ function isLegalSpace(board, i, j) {
         }
       }
     }*/
-    for (r of rules) {
+    for (const r of rules) {
       if (!r(board, i, j, val)) {
         return false;
       }
