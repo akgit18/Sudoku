@@ -42,10 +42,10 @@ function solveHelper(prevBoard, i, j) {
 function getBoard() {
   var table = document.getElementById('board');
   var board = [];
-  for (i = 0; i < (_size ** 2); i++) {
+  for (let i = 0; i < (_size ** 2); i++) {
     let tr = table.rows[i];
     let boardrow = [];
-    for (j = 0; j < (_size ** 2); j++) {
+    for (let j = 0; j < (_size ** 2); j++) {
       let cell = tr.cells[j].children[0].value;
       if (cell > 0) {
         boardrow.push(Number(cell));
@@ -90,8 +90,8 @@ function isLegalSpace(board, i, j) {
         }
       }
     }*/
-    for (let r = 0; r < rules.length; r++) {
-      if (!rules[r](board, i, j, val)) {
+    for (r of rules) {
+      if (!r(board, i, j, val)) {
         return false;
       }
     }
@@ -131,7 +131,7 @@ function knightsmove(board, i, j, val) {
   for (let k = 0; k < 8; k++) {
     let x = i + dx[k];
     let y = j + dy[k];
-    if (0 < x && x < _size**2 && 0 < y && y < _size**2) {
+    if (0 <= x && x < _size**2 && 0 <= y && y < _size**2) {
       if (val == board[x][y]) {
         return false;
       }
@@ -141,7 +141,33 @@ function knightsmove(board, i, j, val) {
 }
 
 function kingsmove(board, i, j, val) {
-  
+  let dx = [-1, -1, -1, 0, 0, 1, 1, 1];
+  let dy = [-1, 0, 1, -1, 1, -1, 0, 1];
+  for (let k = 0; k < 8; k++) {
+    let x = i + dx[k];
+    let y = j + dy[k];
+    if (0 <= x && x < _size**2 && 0 <= y && y < _size**2) {
+      if (val == board[x][y]) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+function orthoplus(board, i, j, val) {
+  let dx = [-1, 0, 0, 1];
+  let dy = [0, -1, 1, 0];
+  for (let k = 0; k < 4; k++) {
+    let x = i + dx[k];
+    let y = j + dy[k];
+    if (0 <= x && x < _size**2 && 0 <= y && y < _size**2) {
+      if ((val + 1 == board[x][y]) || (val - 1 == board[x][y])) {
+        return false;
+      }
+    }
+  }
+  return true;
 }
 
 function toggleRule(checkbox, val) {
@@ -149,11 +175,17 @@ function toggleRule(checkbox, val) {
   if (checkbox.checked) {
     tog = function (r) {rules.push(r)};
   } else {
-    tog = function (r) {rules.splice(rules.indexOf(r))};
+    tog = function (r) {rules.splice(rules.indexOf(r), 1)};
   }
   switch (val) {
     case "1":
       tog(knightsmove)
+      break;
+    case "2":
+      tog(kingsmove)
+      break;
+    case "3":
+      tog(orthoplus)
       break;
     default:
       alert("Uh-oh! Something broke!");
@@ -163,8 +195,8 @@ function toggleRule(checkbox, val) {
 //finds the next empty square, and returns its coordinates
 //returns false if no such space exists
 function nextEmptySpace(board) {
-  for (i = 0; i < (_size ** 2); i++) {
-    for (j = 0; j < (_size ** 2); j++) {
+  for (let i = 0; i < (_size ** 2); i++) {
+    for (let j = 0; j < (_size ** 2); j++) {
       if (board[i][j] < 1) {
         return [i, j];
       }
@@ -179,9 +211,9 @@ function sudokize() {
   try {
     solve1();
     var table = document.getElementById('board');
-    for (i = 0; i < (_size ** 2); i++) {
+    for (let i = 0; i < (_size ** 2); i++) {
       let tr = table.rows[i];
-      for (j = 0; j < (_size ** 2); j++) {
+      for (let j = 0; j < (_size ** 2); j++) {
         let cell = tr.cells[j].children[0];
         cell.value = permaBoard[i][j];
       }

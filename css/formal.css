@@ -6,12 +6,15 @@
   color: #bfbfbf;
   background-color: #f2f2f2;
 }
-button, select, label {
+.ci1 {
+  -webkit-appearance: none;
+}
+button, select, label, .ci1 {
   background-color: #bfbfbf;
   color: #f2f2f2;
   border: 2px solid #bfbfbf;
 }
-button:hover, select:hover {
+button:hover, select:hover, .ci1:checked {
   color: #bfbfbf;
   background-color: #f2f2f2;
 }
