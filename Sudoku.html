@@ -30,12 +30,9 @@
         <!--<option type="number" value="4">4</option>
         <option type="number" value="5">5</option>-->
       </select>
-      <label for="knight">Knightsmove</label>
-      <input type="checkbox" id="knight" value="1" class="ci1" onChange="toggleRule(this, this.value)">
-      <label for="king">Kingsmove</label>
-      <input type="checkbox" id="king" value="2" class="ci1" onChange="toggleRule(this, this.value)">
-      <label for="ortho">Orthoplus</label>
-      <input type="checkbox" id="ortho" value="3" class="ci1" onChange="toggleRule(this, this.value)">
+      <label class="lb1" onChange="toggleRule(this, this.children[0])"><input value="1" type="checkbox" class="lcb">Knightsmove</label>
+      <label class="lb1" onChange="toggleRule(this, this.children[0])"><input value="2" type="checkbox" class="lcb">Kingsmove</label>
+      <label class="lb1" onChange="toggleRule(this, this.children[0])"><input value="3" type="checkbox" class="lcb">Orthoplus</label>
     </div>
     <script type="text/javascript" src="./JS/pagemaker.js" charset="utf-8"></script>
     <script type="text/javascript" src="./JS/solver.js" charset="utf-8"></script>

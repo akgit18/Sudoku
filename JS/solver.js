@@ -170,11 +170,13 @@ function orthoplus(board, i, j, val) {
   return true;
 }
 
-function toggleRule(checkbox, val) {
-  let tog;
+function toggleRule(label, checkbox) {
+  let tog, val = checkbox.value;
   if (checkbox.checked) {
+    label.className="col2";
     tog = function (r) {rules.push(r)};
   } else {
+    label.className="lb1";
     tog = function (r) {rules.splice(rules.indexOf(r), 1)};
   }
   switch (val) {
