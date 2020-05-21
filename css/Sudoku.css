@@ -31,7 +31,21 @@ input {
 }
 .lcb {
   display: none;
+  width: 0px;
+  height: 0px;
 }
 .lb1 {
   text-decoration: line-through;
+}
+body {
+  display: flex;
+  margin: 10px;
+}
+.actions {
+  display: flex;
+  flex-direction: column;
+}
+.actions > button, label, select {
+  margin-bottom: 10px;
+  margin-left: 10px;
 }
