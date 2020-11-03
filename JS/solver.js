@@ -73,6 +73,9 @@ function isLegalAll(board) {
 //is the number on i, j legal?
 function isLegalSpace(board, i, j) {
   let val = board[i][j];
+  if (val > _size**2) {
+    throw new Error(`Value ${val} on row ${i+1}, column ${j+1} too large.`)
+  }
   if (val > 0) {
     /*for (k = 0; k < (_size * _size); k++) {
       if (((val == board[k][j]) && k != i) || ((val == board[i][k])) && k != j) {

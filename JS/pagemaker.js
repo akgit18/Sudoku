@@ -1,6 +1,6 @@
 let _size = 3;
-const inpStringC1 = "<input inputmode='numeric' size='1' maxlength='1' autocomplete='off' class='col1'>";
-const inpStringC2 = "<input inputmode='numeric' size='1' maxlength='1' autocomplete='off' class='col2'>";
+const inpStringC1 = "<input inputmode='numeric' size='1' maxlength='2' autocomplete='off' class='col1'>";
+const inpStringC2 = "<input inputmode='numeric' size='1' maxlength='2' autocomplete='off' class='col2'>";
 let inpPicker = false;
 const table = document.getElementById("board");
 const t = document.getElementById("Theme");
@@ -13,19 +13,37 @@ function inpPick() {
   }
 }
 
+// old function; did not color even-sized boards well
+// function boardgen() {
+//   for (i = 0; i < _size; i++) {
+//     inpPicker = !inpPicker;
+//     for (j = 0; j < _size; j++) {
+//       let row = table.insertRow(j);
+//       inpPicker = !inpPicker;
+//       for (m = 0; m < _size; m++) {
+//         inpPicker = !inpPicker;
+//         for (n = 0; n < _size; n++) {
+//           let cell = row.insertCell(n);
+//           cell.innerHTML = inpPick();
+//         }
+//       }
+//     }
+//   }
+//   inpPicker = false;
+// }
+
 function boardgen() {
-  for (i = 0; i < _size; i++) {
-    inpPicker = !inpPicker;
-    for (j = 0; j < _size; j++) {
-      let row = table.insertRow(j);
+  for (let i = 0; i < _size**2; i++) {
+    let row = table.insertRow(i);
+    if (i%_size == 0) {
       inpPicker = !inpPicker;
-      for (m = 0; m < _size; m++) {
+    }
+    for (let j = 0; j < _size**2; j++) {
+      if ((j > 0 || _size%2 == 0) && j%_size == 0) {
         inpPicker = !inpPicker;
-        for (n = 0; n < _size; n++) {
-          let cell = row.insertCell(n);
-          cell.innerHTML = inpPick();
-        }
       }
+      let cell = row.insertCell(j);
+      cell.innerHTML = inpPick();
     }
   }
   inpPicker = false;
@@ -41,7 +59,6 @@ function boardclear() {
 function reTheme() {
   theme = t.options[t.selectedIndex].value;
   document.getElementById("themesheet").href = theme;
-  //boardclear();
 }
 
 function reSize() {

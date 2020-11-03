@@ -1,0 +1,20 @@
+.col1 {
+  background-color: #1a1a1a;
+  color: #4d4d4d;
+}
+.col2 {
+  color: #1a1a1a;
+  background-color: #4d4d4d;
+}
+button, select, label {
+  background-color: #1a1a1a;
+  color: #4d4d4d;
+  border: 2px solid #1a1a1a;
+}
+button:hover, select:hover, label:hover {
+  color: #1a1a1a;
+  background-color: #4d4d4d;
+}
+body {
+  background-color: #808080
+}
