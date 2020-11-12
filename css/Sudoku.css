@@ -11,14 +11,20 @@ td {
   height: 50px;
 }
 button, select, label {
-  width: 130px;
-  height: 45px;
+  width: auto;
   padding: 10px;
   cursor: pointer;
-  font-size: 20px;
+  font-size: large;
   font-weight: bold;
   font-family: Arial;
+  text-align: center;
   transition-duration: 0.4s;
+}
+button, select {
+  height: 45px;
+}
+label {
+  height: auto;
 }
 input {
   width: 49px;

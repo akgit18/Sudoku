@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Sudoku</title>
     <link rel="stylesheet" href="./css/Sudoku.css">
-    <link id="themesheet" rel="stylesheet" title="theme" href="./css/formal.css">
+    <link id="themesheet" rel="stylesheet" title="theme" href="./css/light.css">
   </head>
   <body onload="boardgen()">
     <noscript>
@@ -18,16 +18,20 @@
       <button onclick="boardclear()">
         Clear
       </button>
-      <select name="Theme" id="Theme" onChange="reTheme()">
-        <option value="./css/formal.css" selected="selected">Formal</option>
+      <select name="Theme" id="Theme" onChange="document.getElementById('themesheet').href = this.value;">
+        <option value="./css/light.css" selected="selected">Light</option>
         <option value="./css/dark.css">Dark</option>
         <option value="./css/pumpkin.css">Pumpkin</option>
       </select>
-      <select name="Size" id="Size" onChange="reSize()">
+      <select name="Size" id="Size" onChange="reSize(this, this.value);">
         <option type="number" value="2">2</option>
         <option type="number" value="3" selected="selected">3</option>
         <option type="number" value="4">4</option>
         <!-- <option type="number" value="5">5</option> -->
+      </select>
+      <select name="Solver" id="Solver" onChange="useSolver(this.value);">
+        <option value="solve1" selected="selected">Backtracking</option>
+        <option value="localSearch">Local Search</option>
       </select>
       <label class="lb1" onChange="toggleRule(this, this.children[0])"><input value="1" type="checkbox" class="lcb">Knightsmove</label>
       <label class="lb1" onChange="toggleRule(this, this.children[0])"><input value="2" type="checkbox" class="lcb">Kingsmove</label>
