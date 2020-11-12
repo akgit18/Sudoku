@@ -3,8 +3,9 @@ const inpStringC1 = "<input inputmode='numeric' size='1' maxlength='2' autocompl
 const inpStringC2 = "<input inputmode='numeric' size='1' maxlength='2' autocomplete='off' class='col2'>";
 let inpPicker = false;
 const table = document.getElementById("board");
-const t = document.getElementById("Theme");
-let theme = t.options[t.selectedIndex].value;
+const defaultMap = new Map();
+//const t = document.getElementById("Theme");
+//let theme = t.options[t.selectedIndex].value;
 function inpPick() {
   if (inpPicker) {
     return inpStringC1;
@@ -44,6 +45,7 @@ function boardgen() {
       }
       let cell = row.insertCell(j);
       cell.innerHTML = inpPick();
+      defaultMap.set(100 * i + j, setify(i, j)); //TODO: new single # indexing method for squares
     }
   }
   inpPicker = false;
@@ -56,13 +58,18 @@ function boardclear() {
   }
 }
 
-function reTheme() {
+/*
+function reTheme(theme) {
   theme = t.options[t.selectedIndex].value;
   document.getElementById("themesheet").href = theme;
-}
+}*/
 
-function reSize() {
-  s = document.getElementById("Size");
-  _size = s.options[s.selectedIndex].value;
-  boardclear();
+function reSize(selector, val) {
+  if (confirm("Are you sure? This will erase any data you have currently entered.")) {
+    _size = val;
+    table.removeChild(document.getElementsByTagName('tbody')[0]);
+    boardgen();
+  } else {
+    selector.value = _size;
+  }
 }

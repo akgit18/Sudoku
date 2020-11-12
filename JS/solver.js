@@ -1,4 +1,5 @@
 var rules = [rowcolumn, boxrule]; //active rules
+//var ruleViols = [rowcolumnboxViols] //violation counters
 
 //solves a 2-d Sudoku array (backtracking method)
 function solve1() {
@@ -59,10 +60,18 @@ function getBoard() {
 }
 
 //is the whole board legal?
-function isLegalAll(board) {
-  for (i = 0; i < (_size * _size); i++) {
-    for (j = 0; j < (_size * _size); j++) {
-      if (!isLegalSpace(board, i, j)) {
+function isLegalAll(board, sqList = null) {
+  if (!sqList) {
+    for (i = 0; i < (_size * _size); i++) {
+      for (j = 0; j < (_size * _size); j++) {
+        if (!isLegalSpace(board, i, j)) {
+          return false;
+        }
+      }
+    }
+  } else {
+    for (const sq of sqList) {
+      if (!isLegalSpace(board, sq[0], sq[1])) {
         return false;
       }
     }
@@ -211,20 +220,171 @@ function nextEmptySpace(board) {
 }
 
 //solves the board (table), then puts the board (array) into the HTML table
+var solver = solve1
 function sudokize() {
   let solved;
   try {
-    solve1();
-    var table = document.getElementById('board');
-    for (let i = 0; i < (_size ** 2); i++) {
-      let tr = table.rows[i];
-      for (let j = 0; j < (_size ** 2); j++) {
-        let cell = tr.cells[j].children[0];
-        cell.value = permaBoard[i][j];
-      }
-    }
+    //tic = Date.now();
+    solver();
+    //toc = Date.now() - tic;
+    //console.log(`solve time: ${toc} ms`)
+    putBoard()
   } catch(e) {
     alert(e);
     console.log(e);
   }
+}
+
+function putBoard(board = permaBoard) {
+  for (let i = 0; i < (_size ** 2); i++) {
+    let tr = table.rows[i];
+    for (let j = 0; j < (_size ** 2); j++) {
+      let cell = tr.cells[j].children[0];
+      cell.value = board[i][j];
+    }
+  }
+}
+
+function useSolver(s) {
+  solver = eval(s);
+}
+
+//solves a 2-d Sudoku array (local search method)
+function solve2() {
+  setTimeout(localSearch(), 10000);
+}
+//not guaranteed to work
+function localSearch() {
+  //error checking
+  let board = getBoard();
+  if (!isLegalAll(board)) {
+    throw new Error("Inputted board not valid.");
+  }
+  //let oBoard = getBoard();
+  //let numVboard = [];
+  // setTimeout(function(){
+  //   if (confirm("It has been 10 seconds since starting. Local search may be unable to solve this. Would you like to abort?")) {
+  //     throw new Error("Solve aborted.");
+  //   } else {
+  //     alert("There is no guarantee that this method will solve. It may run forever.")
+  //   }
+  // }, 10000);
+  //randomly fill board
+  let sq;
+  let newSqList = [];
+  while (sq = nextEmptySpace(board)) {
+    board[sq[0]][sq[1]] = minViolatingOption(board, sq[0], sq[1]);
+    newSqList.push(sq);
+  }
+  //find random violating square
+  let numViols;
+  let maxNumIts = 1000*(2**_size);
+  for (let numIts = 0; numIts < maxNumIts; numIts++) {
+    numViols = 0;
+    putBoard(board)
+    let rsq = newSqList[Math.floor(Math.random() * newSqList.length)];
+    if (numViols = numViolationsSpace(board, rsq[0], rsq[1])){
+      board[rsq[0]][rsq[1]] = minViolatingOption(board, rsq[0], rsq[1]);
+    }
+    if(isLegalAll(board, newSqList)) {
+      permaBoard = board;
+      return;
+    }
+  }
+  throw new Error(`${maxNumIts} iterations exceeded without finding a solution.`);
+}
+
+//number of rules violated by a particular space
+function numViolationsSpace(board, i, j, val = board[i][j]) {
+  if (val > _size**2) {
+    throw new Error(`Value ${val} on row ${i+1}, column ${j+1} too large.`)
+  }
+  let viols = 0;
+  if (val > 0) {
+    for (const sq of defaultMap.get(100*i + j)) {
+      if (val == board[sq[0]][sq[1]]) {
+        viols++;
+      }
+    }
+  }
+  return viols;
+}
+
+function minViolatingOption(board, i, j) {
+  maxval = _size**2;
+  let bestNum = 1;
+  let numViols = Infinity;
+  for (let k = 1; k <= maxval; k++) {
+    let val = numViolationsSpace(board, i, j, k);
+    if (val < numViols) {
+      numViols = val;
+      bestNum = k;
+    }
+  }
+  return bestNum;
+}
+
+//number of numViolations
+/*
+function rowcolumnViols(board, i, j, val) {
+  let sum = 0;
+  for (let k = 0; k < (_size * _size); k++) {
+    if (((val == board[k][j]) && k != i) || (((val == board[i][k])) && k != j)) {
+      sum++;
+    }
+  }
+  return sum;
+}
+
+function boxruleViols(board, i, j, val) {
+  let sum = 0;
+  let iFloor = Math.floor(i/_size) * _size;
+  let jFloor = Math.floor(j/_size) * _size;
+  for (let m = 0; m < _size; m++) {
+    for (let n = 0; n < _size; n++) {
+      if ((m + iFloor != i) || (n + jFloor != j)) {
+        if (board[m + iFloor][n + jFloor] == board[i][j]) {
+          sum++;
+        }
+      }
+    }
+  }
+  return sum;
+}*/
+
+//functions that return a list of possibly
+//conflicting squares for a square at i, j
+function boxSq(i, j) {
+  let sqList = [];
+  let iFloor = Math.floor(i/_size) * _size;
+  let jFloor = Math.floor(j/_size) * _size;
+  for (let m = 0; m < _size; m++) {
+    for (let n = 0; n < _size; n++) {
+      if ((m + iFloor != i) || (n + jFloor != j)) {
+        sqList.push([m + iFloor, n + jFloor])
+      }
+    }
+  }
+  return sqList;
+}
+
+function rowcolumnSq(i, j) {
+
+  let sqList = [];
+  for (let k = 0; k < (_size**2); k++) {
+    if (k != i) {
+      sqList.push([k, j])
+    }
+    if (k != j) {
+      sqList.push([i, k])
+    }
+  }
+  return sqList;
+}
+
+//organizes the square lists into a set
+function setify(i, j) {
+  let l1 = boxSq(i, j);
+  let l2 = rowcolumnSq(i, j);
+  return new Set(l1.concat(l2));
 }
