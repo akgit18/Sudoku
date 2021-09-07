@@ -73,3 +73,5 @@ function reSize(selector, val) {
     selector.value = _size;
   }
 }
+
+document.body.onload = boardgen;
