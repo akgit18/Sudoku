@@ -11,8 +11,6 @@ td {
   height: 50px;
 }
 button, select, label {
-  width: auto;
-  padding: 10px;
   cursor: pointer;
   font-size: large;
   font-weight: bold;
@@ -22,9 +20,13 @@ button, select, label {
 }
 button, select {
   height: 45px;
+  width: 150px;
+  padding: 10px;
 }
 label {
   height: auto;
+  width: 146px;
+  padding: 10px 0px 10px 0px;
 }
 input {
   width: 49px;
@@ -59,4 +61,6 @@ hr {
   margin-left: 10px;
   margin-top: 0px;
   width: 150px;
+  border-left: 0px;
+  border-right: 0px;
 }
