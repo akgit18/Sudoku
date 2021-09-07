@@ -1,7 +1,9 @@
 # Sudoku
 Sudoku solver implemented in Javascript
 
-Front end designed in HTML
+UI designed in HTML & CSS
+
+Has no external dependencies
 
 ## Additional Sudoku rules:
 
