@@ -74,4 +74,8 @@ function reSize(selector, val) {
   }
 }
 
-document.body.onload = boardgen;
+document.body.onload = () => {
+  boardgen();
+  document.getElementById('cboard').onclick = () => boardclear();
+  document.getElementById('sboard').onclick = () => sudokize();
+}
