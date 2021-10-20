@@ -15,3 +15,8 @@ Has no external dependencies
 
 * Backtracking (Recommended)
 * Local Search (Does not yet work with the optional rules)
+
+## Themes:
+
+* "Auto" detects which theme the device is set to and uses that
+* The user can also select from three other themes: Light or Dark (independent of device theme) or Pumpkin (orange and green)

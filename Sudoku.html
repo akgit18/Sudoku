@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Sudoku</title>
     <link rel="stylesheet" href="./css/Sudoku.css">
-    <link id="themesheet" rel="stylesheet" title="theme" href="./css/light.css">
+    <link id="themesheet" rel="stylesheet" title="theme" href="./css/system.css">
   </head>
   <body>
     <noscript>
@@ -20,7 +20,8 @@
       </button>
       <hr>
       <select title="The theme." name="Theme" id="Theme" onChange="document.getElementById('themesheet').href = this.value;">
-        <option value="./css/light.css" selected="selected">Light</option>
+        <option value="./css/system.css" selected="selected">Auto</option>
+        <option value="./css/light.css">Light</option>
         <option value="./css/dark.css">Dark</option>
         <option value="./css/pumpkin.css">Pumpkin</option>
       </select>
