@@ -11,9 +11,11 @@ button, select, label {
   color: #000000;
   border: 2px solid #505050;
 }
-button:hover, select:hover, label:hover {
-  color: #505050;
-  background-color: #000000;
+@media (any-hover: hover) {
+  button:hover, select:hover, label:hover {
+    color: #505050;
+    background-color: #000000;
+  }
 }
 body {
   background-color: #808080;
