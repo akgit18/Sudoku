@@ -1,13 +1,14 @@
-var rules = [rowcolumn, boxrule]; //active rules
+const rules = [rowcolumn, boxrule]; //active rules
 //var ruleViols = [rowcolumnboxViols] //violation counters
 
 //solves a 2-d Sudoku array (backtracking method)
-function solve1() {
+function backtracking() {
   let board = getBoard();
   if (!isLegalAll(board)) {
     throw new Error("Inputted board not valid.");
   }
-  if (sq = nextEmptySpace(board)) {
+  const sq = nextEmptySpace(board);
+  if (sq) {
     let solved = solveHelper(board, sq[0], sq[1]);
     if (solved) {
       return solved;
@@ -17,14 +18,15 @@ function solve1() {
   }
 }
 
-//recursive helper for solve1
-var permaBoard;
+//recursive helper for backtracking
+let permaBoard;
 function solveHelper(prevBoard, i, j) {
   let solved = false;
-  for (let guess = 1; guess < (_size**2 + 1); guess++) {
+  for (let guess = 1; guess < (_size**2 + 1); ++guess) {
     prevBoard[i][j] = guess;
     if (isLegalSpace(prevBoard, i, j)) {
-      if (sq = nextEmptySpace(prevBoard)) {
+      const sq = nextEmptySpace(prevBoard);
+      if (sq) {
         solved = solveHelper(prevBoard, sq[0], sq[1]);
         if (solved) {
           return true;
@@ -62,8 +64,8 @@ function getBoard() {
 //is the whole board legal?
 function isLegalAll(board, sqList = null) {
   if (!sqList) {
-    for (i = 0; i < (_size * _size); i++) {
-      for (j = 0; j < (_size * _size); j++) {
+    for (let i = 0; i < (_size * _size); i++) {
+      for (let j = 0; j < (_size * _size); j++) {
         if (!isLegalSpace(board, i, j)) {
           return false;
         }
@@ -186,10 +188,10 @@ function toggleRule(label, checkbox) {
   let tog, val = checkbox.value;
   if (checkbox.checked) {
     label.className="col2";
-    tog = function (r) {rules.push(r)};
+    tog = (r) => {rules.push(r)};
   } else {
     label.className="lb1";
-    tog = function (r) {rules.splice(rules.indexOf(r), 1)};
+    tog = (r) => {rules.splice(rules.indexOf(r), 1)};
   }
   switch (val) {
     case "1":
@@ -220,9 +222,8 @@ function nextEmptySpace(board) {
 }
 
 //solves the board (table), then puts the board (array) into the HTML table
-var solver = solve1
+let solver = () => backtracking()
 function sudokize() {
-  let solved;
   try {
     //tic = Date.now();
     solver();
@@ -246,12 +247,20 @@ function putBoard(board = permaBoard) {
 }
 
 function useSolver(s) {
-  solver = eval(s);
+  switch (s) {
+    case "backtracking": solver = backtracking;
+    break;
+    case "localSearch": solver = localSearch;
+    break;
+    case "DLX":;
+    break;
+    default: alert(`${s} is not a supported solving method!`)
+  }
 }
 
 //solves a 2-d Sudoku array (local search method)
 function solve2() {
-  setTimeout(localSearch(), 10000);
+  setTimeout(() => localSearch(), 10000);
 }
 //not guaranteed to work
 function localSearch() {
@@ -311,7 +320,7 @@ function numViolationsSpace(board, i, j, val = board[i][j]) {
 }
 
 function minViolatingOption(board, i, j) {
-  maxval = _size**2;
+  const maxval = _size**2;
   let bestNum = 1;
   let numViols = Infinity;
   for (let k = 1; k <= maxval; k++) {

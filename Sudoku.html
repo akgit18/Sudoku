@@ -27,20 +27,20 @@
         <option value="./css/dark.css">Dark</option>
         <option value="./css/pumpkin.css">Pumpkin</option>
       </select>
-      <select title="The dimension of each box, or the square root of the dimensions of the whole board. Boards of size 4 with additional rules active may take noticeably long times to solve." name="Size" id="Size" onChange="reSize(this, this.value);">
+      <select title="The dimension of each box, or the square root of the dimensions of the whole board. Boards of size 4 with additional rules active may take noticeably long times to solve." name="Size" id="Size">
         <option type="number" value="2">2</option>
         <option type="number" value="3" selected="selected">3</option>
         <option type="number" value="4">4</option>
         <!-- <option type="number" value="5">5</option> -->
       </select>
-      <select title="The solving method. Backtracking is recommended; Local Search may take a much longer time." name="Solver" id="Solver" onChange="useSolver(this.value);">
-        <option value="solve1" selected="selected">Backtracking</option>
+      <select title="The solving method. Backtracking is recommended; Local Search may take a much longer time." name="Solver" id="Solver">
+        <option value="backtracking" selected="selected">Backtracking</option>
         <option value="localSearch">Local Search</option>
       </select>
       <hr>
-      <label title="Squares within a chess knight's move of each other cannot be the same number." class="lb1" onChange="toggleRule(this, this.children[0])"><input value="1" type="checkbox" class="lcb">Knightsmove</label>
-      <label title="Squares within a chess king's move of each other cannot be the same number." class="lb1" onChange="toggleRule(this, this.children[0])"><input value="2" type="checkbox" class="lcb">Kingsmove</label>
-      <label title="Squares cannot be +1 or -1 from any orthogonally adjacent square." class="lb1" onChange="toggleRule(this, this.children[0])"><input value="3" type="checkbox" class="lcb">Orthoplus</label>
+      <label title="Squares within a chess knight's move of each other cannot be the same number." class="lb1"><input value="1" type="checkbox" class="lcb">Knightsmove</label>
+      <label title="Squares within a chess king's move of each other cannot be the same number." class="lb1"><input value="2" type="checkbox" class="lcb">Kingsmove</label>
+      <label title="Squares cannot be +1 or -1 from any orthogonally adjacent square." class="lb1"><input value="3" type="checkbox" class="lcb">Orthoplus</label>
     </div>
     <!-- <script type="text/javascript" src="./JS/pagemaker.js" charset="utf-8"></script>
     <script type="text/javascript" src="./JS/solver.min.js" charset="utf-8"></script> -->

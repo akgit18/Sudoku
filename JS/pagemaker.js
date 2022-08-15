@@ -15,7 +15,7 @@ function inpPick() {
 }
 
 // old function; did not color even-sized boards well
-// function boardgen() {
+// function boardGen() {
 //   for (i = 0; i < _size; i++) {
 //     inpPicker = !inpPicker;
 //     for (j = 0; j < _size; j++) {
@@ -33,7 +33,7 @@ function inpPick() {
 //   inpPicker = false;
 // }
 
-function boardgen() {
+function boardGen() {
   for (let i = 0; i < _size**2; i++) {
     let row = table.insertRow(i);
     if (i%_size == 0) {
@@ -51,10 +51,10 @@ function boardgen() {
   inpPicker = false;
 }
 
-function boardclear() {
+function boardClear() {
   if (confirm("Are you sure? This will erase any data you have currently entered.")) {
     table.removeChild(document.getElementsByTagName('tbody')[0]);
-    boardgen();
+    boardGen();
   }
 }
 
@@ -68,14 +68,38 @@ function reSize(selector, val) {
   if (confirm("Are you sure? This will erase any data you have currently entered.")) {
     _size = val;
     table.removeChild(document.getElementsByTagName('tbody')[0]);
-    boardgen();
+    boardGen();
   } else {
     selector.value = _size;
   }
 }
 
+// function generateBoard() {
+//   const starterboard = [];
+//   const row = [];
+//   for (let j = 0; j < _size**2; j++) {
+//     row.push(-1);
+//   }
+//   for (let i = 0; i < _size**2; i++) {
+//     starterboard.push(row);
+//   }
+//   let rand = Math.floor(Math.random() * 9);
+// }
+
+// function shuffleRowBlocks(params) {
+  
+// }
+
+// setup board + onclick/onchange functions
 document.body.onload = () => {
-  boardgen();
-  document.getElementById('cboard').onclick = () => boardclear();
+  boardGen();
+  document.getElementById('cboard').onclick = () => boardClear();
   document.getElementById('sboard').onclick = () => sudokize();
+  const sz = document.getElementById('Size');
+  sz.onchange = () => reSize(sz, sz.value);
+  const slvr = document.getElementById('Solver');
+  slvr.onchange = () => useSolver(slvr.value);
+  for (const toggleable of document.getElementsByClassName('lb1')) {
+    toggleable.onchange = () => toggleRule(toggleable, toggleable.children[0]);
+  }
 }
