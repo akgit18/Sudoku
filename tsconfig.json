@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+      "target": "es2017",
+      "module": "commonjs",
+      "outDir": "JS/",
+      "strict": true,
+      "lib": [
+        "es2015",
+        "dom",
+      ],
+    },
+    "include": [
+        "ts/pagemaker.ts",
+        "ts/solver.ts",
+    ],
+    "exclude": [
+      "test.ts"
+    ]
+  }
