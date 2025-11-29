@@ -1,44 +1,24 @@
 "use strict";
 const rules = [rowcolumn, boxrule]; //active rules
 //var ruleViols = [rowcolumnboxViols] //violation counters
-//solves a 2-d Sudoku array (backtracking method)
-function backtracking() {
-    let board = getBoard();
-    if (!isLegalAll(board)) {
-        throw new Error("Inputted board not valid.");
-    }
-    const sq = nextEmptySpace(board);
-    if (sq) {
-        let solved = solveHelper(board, sq[0], sq[1]);
-        if (solved) {
-            return solved;
-        }
-        else {
-            throw new Error("Unsolvable board.");
-        }
-    }
-}
 //recursive helper for backtracking
-let permaBoard;
-function solveHelper(prevBoard, i, j) {
-    let solved = false;
+function backtracking(boardRef, i, j) {
     for (let guess = 1; guess < (_size ** 2 + 1); ++guess) {
-        prevBoard[i][j] = guess;
-        if (isLegalSpace(prevBoard, i, j)) {
-            const sq = nextEmptySpace(prevBoard);
+        boardRef[i][j] = guess;
+        if (isLegalSpace(boardRef, i, j)) {
+            const sq = nextEmptySpace(boardRef);
             if (sq) {
-                solved = solveHelper(prevBoard, sq[0], sq[1]);
+                const solved = backtracking(boardRef, sq[0], sq[1]);
                 if (solved) {
                     return true;
                 }
             }
             else {
-                permaBoard = prevBoard;
                 return true;
             }
         }
     }
-    prevBoard[i][j] = -1;
+    boardRef[i][j] = -1;
     return false;
 }
 //puts board into array format
@@ -49,8 +29,6 @@ function getBoard() {
         let tr = table.rows[i];
         let boardrow = [];
         for (let j = 0; j < (_size ** 2); j++) {
-            console.log("whats that type");
-            console.log(typeof tr.cells[j].children[0]);
             let cell = tr.cells[j].children[0].value;
             if (cell > 0) {
                 boardrow.push(parseInt(cell, 10));
@@ -139,11 +117,11 @@ function boxrule(board, i, j, val) {
 }
 //additional rules
 function knightsmove(board, i, j, val) {
-    let dx = [-2, -2, -1, -1, 1, 1, 2, 2];
-    let dy = [-1, 1, -2, 2, -2, 2, -1, 1];
+    const dx = [-2, -2, -1, -1, 1, 1, 2, 2];
+    const dy = [-1, 1, -2, 2, -2, 2, -1, 1];
     for (let k = 0; k < 8; k++) {
-        let x = i + dx[k];
-        let y = j + dy[k];
+        const x = i + dx[k];
+        const y = j + dy[k];
         if (0 <= x && x < _size ** 2 && 0 <= y && y < _size ** 2) {
             if (val == board[x][y]) {
                 return false;
@@ -153,11 +131,11 @@ function knightsmove(board, i, j, val) {
     return true;
 }
 function kingsmove(board, i, j, val) {
-    let dx = [-1, -1, -1, 0, 0, 1, 1, 1];
-    let dy = [-1, 0, 1, -1, 1, -1, 0, 1];
+    const dx = [-1, -1, -1, 0, 0, 1, 1, 1];
+    const dy = [-1, 0, 1, -1, 1, -1, 0, 1];
     for (let k = 0; k < 8; k++) {
-        let x = i + dx[k];
-        let y = j + dy[k];
+        const x = i + dx[k];
+        const y = j + dy[k];
         if (0 <= x && x < _size ** 2 && 0 <= y && y < _size ** 2) {
             if (val == board[x][y]) {
                 return false;
@@ -201,7 +179,7 @@ function toggleRule(label, checkbox) {
             tog(orthoplus);
             break;
         default:
-            alert("Uh-oh! Something broke!");
+            alert("Attempting to toggle unknown rule");
     }
 }
 //finds the next empty square, and returns its coordinates
@@ -217,21 +195,31 @@ function nextEmptySpace(board) {
     return undefined;
 }
 //solves the board (table), then puts the board (array) into the HTML table
-let solver = () => backtracking();
+let solver = (board, i, j) => backtracking(board, i, j);
 function sudokize() {
     try {
-        //tic = Date.now();
-        solver();
-        //toc = Date.now() - tic;
-        //console.log(`solve time: ${toc} ms`)
-        putBoard();
+        let board = getBoard();
+        if (!isLegalAll(board)) {
+            throw new Error("Inputted board not valid.");
+        }
+        const sq = nextEmptySpace(board);
+        if (sq) {
+            const tic = Date.now();
+            let solved = solver(board, sq[0], sq[1]);
+            const toc = Date.now() - tic;
+            console.log(`solve time: ${toc} ms`);
+            if (!solved) {
+                throw new Error("Unsolvable board.");
+            }
+        }
+        putBoard(board);
     }
     catch (e) {
         alert(e);
         console.log(e);
     }
 }
-function putBoard(board = permaBoard) {
+function putBoard(board) {
     for (let i = 0; i < (_size ** 2); i++) {
         let tr = table.rows[i];
         for (let j = 0; j < (_size ** 2); j++) {
@@ -249,19 +237,15 @@ function useSolver(s) {
             solver = localSearch;
             break;
         case "DLX":
-            ;
             break;
-        default: alert(`${s} is not a supported solving method!`);
+        default:
+            alert(`${s} is not a supported solving method!`);
     }
 }
 //solves a 2-d Sudoku array (local search method)
-function solve2() {
-    setTimeout(() => localSearch(), 10000);
-}
 //not guaranteed to work
-function localSearch() {
+function localSearch(board, i, j) {
     //error checking
-    let board = getBoard();
     if (!isLegalAll(board)) {
         throw new Error("Inputted board not valid.");
     }
@@ -292,8 +276,7 @@ function localSearch() {
             board[rsq[0]][rsq[1]] = minViolatingOption(board, rsq[0], rsq[1]);
         }
         if (isLegalAll(board, newSqList)) {
-            permaBoard = board;
-            return;
+            return true;
         }
     }
     throw new Error(`${maxNumIts} iterations exceeded without finding a solution.`);
@@ -353,14 +336,13 @@ function boxruleViols(board, i, j, val) {
   }
   return sum;
 }*/
-//functions that return a list of possibly
-//conflicting squares for a square at i, j
+/** squares in the same box as a square at i, j */
 function boxSq(i, j) {
-    let sqList = [];
-    let iFloor = Math.floor(i / _size) * _size;
-    let jFloor = Math.floor(j / _size) * _size;
-    for (let m = 0; m < _size; m++) {
-        for (let n = 0; n < _size; n++) {
+    const sqList = [];
+    const iFloor = Math.floor(i / _size) * _size;
+    const jFloor = Math.floor(j / _size) * _size;
+    for (let m = 0; m < _size; ++m) {
+        for (let n = 0; n < _size; ++n) {
             if ((m + iFloor != i) || (n + jFloor != j)) {
                 sqList.push([m + iFloor, n + jFloor]);
             }
@@ -368,9 +350,10 @@ function boxSq(i, j) {
     }
     return sqList;
 }
+/** squares in the same row/column as a square at i, j */
 function rowcolumnSq(i, j) {
-    let sqList = [];
-    for (let k = 0; k < (_size ** 2); k++) {
+    const sqList = [];
+    for (let k = 0; k < (_size ** 2); ++k) {
         if (k != i) {
             sqList.push([k, j]);
         }

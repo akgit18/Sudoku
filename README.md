@@ -1,9 +1,6 @@
 # Sudoku
-Sudoku solver implemented in Javascript
-
-UI designed in HTML & CSS
-
-Has no external dependencies
+Sudoku solver implemented in Typescript and compiled with the closure compiler.
+Hosted with Github Pages at https://akgit18.github.io/Sudoku/
 
 ## Additional Sudoku rules:
 
