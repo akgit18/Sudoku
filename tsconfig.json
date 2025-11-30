@@ -10,8 +10,8 @@
       ],
     },
     "include": [
-        "ts/pagemaker.ts",
-        "ts/solver.ts",
+        "ts/ui/ui.ts",
+        "ts/solver/solver.ts",
     ],
     "exclude": [
       "test.ts"
