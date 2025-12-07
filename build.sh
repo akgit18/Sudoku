@@ -1,4 +1,14 @@
 #! /bin/bash -e
+
+force_compile_all=0
+while getopts "a" opt; do
+    case $opt in
+        a)
+            force_compile_all=1
+            ;;
+    esac
+done
+
 echo -e "\033[32mStarting build\033[0m"
 modified="`git status --short | awk '{print $2}'`"
 
@@ -15,7 +25,7 @@ compile_ui_js() {
 compiled_all=0
 for tsfile in ts/common/* tsconfig.base.json
 do
-    if [[ ${modified[*]} =~ $tsfile ]]
+    if [ "$force_compile_all" -eq 1 ] || [[ ${modified[*]} =~ $tsfile ]]
     then
         tsc -b ts/common/ ts/ui/ ts/solver/
         compile_ui_js
@@ -48,7 +58,7 @@ then
     done
 fi
 
-if [[ ${modified[*]} =~ Sudoku.html ]]
+if [ "$force_compile_all" -eq 1 ] || [[ ${modified[*]} =~ Sudoku.html ]]
 then
     minify Sudoku.html > index.html
     echo -e "\033[33mMinified HTML\033[0m"
