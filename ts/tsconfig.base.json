@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "es2020",
+    // TODO: nodenext when I upgrade ts
+    "moduleResolution": "node",
+    "outDir": "../js/",
+    "rootDir": ".",
+    "strict": true,
+    "composite": true,
+    "paths": {
+      "@common": ["./common/*.ts"],
+    },
+  },
+}
