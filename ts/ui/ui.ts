@@ -4,8 +4,8 @@ import {pointToIndex, MessageTypes, minSizeArray} from "../common/common";
 if (!self.Worker) {
   throw new Error("Browser does not support web workers. Please use a more modern browser.");
 }
-const workerUrl = new URL("../solver/solver.min.js", import.meta.url);
-const worker = new Worker(workerUrl);
+const workerUrl = new URL("../solver/solver.min.mjs", import.meta.url);
+const worker = new Worker(workerUrl, {type: "module"});
 
 let boxSizeGlobal = 3;
 const inpStringC1 = "<input inputmode='numeric' size='1' maxlength='2' autocomplete='off' class='col1'>";
@@ -165,6 +165,12 @@ document.body.onload = () => {
         console.error(`Unsupported message from worker to main thread:`, data)
         break;
     }
+  }
+  worker.onerror = (event: ErrorEvent) => {
+    console.error("worker error:", event);
+  }
+  worker.onmessageerror = (event: MessageEvent) => {
+    console.error("message error for:", event);
   }
 
   const sz = document.getElementById('Size') as HTMLSelectElement;

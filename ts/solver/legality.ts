@@ -3,7 +3,7 @@ import type {Point, TypedUintArray} from '../common/common';
 import {maxValueOfTypedArray, pointToIndex} from '../common/common';
 
 //is the whole board legal?
-export function isLegalAll(board: Readonly<TypedUintArray>, edgeSize: number, sqList: undefined | number[][] = undefined) {
+export function isLegalAll(board: Readonly<TypedUintArray>, edgeSize: number, sqList: undefined | number[][]) {
     if (!sqList) {
       for (let i = 0; i < edgeSize; i++) {
         for (let j = 0; j < edgeSize; j++) {

@@ -4,10 +4,6 @@ import { isLegalAll, minViolatingOption, nextEmptySpace, numViolationsSpace } fr
 // solves a 2-d Sudoku array (local search method)
 // not guaranteed to work
 export function localSearch(board: TypedUintArray, i: number, j: number, edgeSize: number) {
-    //error checking
-    if (!isLegalAll(board, edgeSize)) {
-      throw new Error("Inputted board not valid.");
-    }
     //let oBoard = getBoard();
     //let numVboard = [];
     // setTimeout(function(){

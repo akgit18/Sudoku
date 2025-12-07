@@ -61,7 +61,7 @@ function attemptSolve(board: ArrayBuffer, boxSize: number) {
   const edgeSize = boxSize ** 2;
   const arrayConstructor = minSizeArray(boxSize, () => true);
   const boardView = new arrayConstructor(board, 0, edgeSize ** 2);
-  if (!isLegalAll(boardView, edgeSize)) {
+  if (!isLegalAll(boardView, edgeSize, undefined)) {
     throw new Error("Inputted board not valid.");
   }
   const sq = nextEmptySpace(boardView, edgeSize);
