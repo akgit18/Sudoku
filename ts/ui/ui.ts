@@ -11,7 +11,8 @@ let boxSizeGlobal = 3;
 const boardElement = document.getElementById("board") as HTMLDivElement;
 
 function setInputElementAttributes(cell: HTMLInputElement, oddInputStyle: boolean, cellSize: number): void {
-  cell.inputMode = "numeric";
+  // closure compiler doesn't know about inputMode, I guess
+  cell["inputMode"] = "numeric";
   cell.size = cellSize;
   cell.maxLength = cellSize;
   cell.autocomplete = "off";
