@@ -1,5 +1,5 @@
 import type {MessageFromWorker, MessageToWorker, RuleValue, TypedUintArray} from "../common/common";
-import {pointToIndex, MessageTypes, minSizeArray} from "../common/common";
+import {MessageTypes, minSizeArray} from "../common/common";
 
 if (!self.Worker) {
   throw new Error("Browser does not support web workers. Please use a more modern browser.");
@@ -8,24 +8,25 @@ const workerUrl = new URL("../solver/solver.min.mjs", import.meta.url);
 const worker = new Worker(workerUrl, {type: "module"});
 
 let boxSizeGlobal = 3;
-const inpStringC1 = "<input inputmode='numeric' size='1' maxlength='2' autocomplete='off' class='col1'>";
-const inpStringC2 = "<input inputmode='numeric' size='1' maxlength='2' autocomplete='off' class='col2'>";
-const table = document.getElementById("board") as HTMLTableElement;
-// const defaultMap = new Map();
-//const t = document.getElementById("Theme");
-//let theme = t.options[t.selectedIndex].value;
-function getInputElement(oddInputStyle: boolean) {
+const boardElement = document.getElementById("board") as HTMLDivElement;
+
+function setInputElementAttributes(cell: HTMLInputElement, oddInputStyle: boolean, cellSize: number): void {
+  cell.inputMode = "numeric";
+  cell.size = cellSize;
+  cell.maxLength = cellSize;
+  cell.autocomplete = "off";
   if (oddInputStyle) {
-    return inpStringC1;
+    cell.classList.add("col1");
   } else {
-    return inpStringC2;
+    cell.classList.add("col2");
   }
 }
 
 function createBoard() {
   let oddInputStyle = false;
+  boardElement.style.setProperty('--edgeSize', (boxSizeGlobal**2).toString(10));
+  const cells: HTMLInputElement[] = [];
   for (let i = 0; i < boxSizeGlobal**2; i++) {
-    let row = table.insertRow(i);
     if (i%boxSizeGlobal == 0) {
       oddInputStyle = !oddInputStyle;
     }
@@ -33,15 +34,17 @@ function createBoard() {
       if ((j > 0 || boxSizeGlobal%2 == 0) && j%boxSizeGlobal == 0) {
         oddInputStyle = !oddInputStyle;
       }
-      let cell = row.insertCell(j);
-      cell.innerHTML = getInputElement(oddInputStyle);
+      const cell = document.createElement('input');
+      const cellSize = Math.ceil(Math.log10((boxSizeGlobal ** 2) + 1));
+      setInputElementAttributes(cell, oddInputStyle, cellSize);
+      cells.push(cell);
     }
   }
+  boardElement.replaceChildren(...cells);
 }
 
 function boardClear() {
   if (confirm("Are you sure? This will erase any data you have currently entered.")) {
-    table.removeChild(document.getElementsByTagName('tbody')[0]);
     createBoard();
   }
 }
@@ -55,7 +58,6 @@ function reTheme(theme) {
 function reSize(selector: HTMLSelectElement, val: string) {
   if (confirm("Are you sure? This will erase any data you have currently entered.")) {
     boxSizeGlobal = parseInt(val, 10);
-    table.removeChild(document.getElementsByTagName('tbody')[0]);
     createBoard();
   } else {
     selector.value = boxSizeGlobal.toString(10);
@@ -66,21 +68,17 @@ function reSize(selector: HTMLSelectElement, val: string) {
 function getBoardAsArrayBuffer(boxSize: number): ArrayBuffer {
   const arrayConstructor = minSizeArray(boxSize, confirm);
   const edgeSize = boxSize ** 2;
-  const table = document.getElementById('board') as HTMLTableElement;
+  const boardElement = document.getElementById('board') as HTMLDivElement;
   const bufferSize = arrayConstructor.BYTES_PER_ELEMENT * (edgeSize ** 2);
   const buffer = new ArrayBuffer(bufferSize);
   const view: TypedUintArray = new arrayConstructor(buffer, 0, edgeSize ** 2);
-  for (let i = 0; i < edgeSize; i++) {
-    const tr = table.rows[i];
-    for (let j = 0; j < edgeSize; j++) {
-      const cell = tr.cells[j].children[0] as HTMLInputElement;
-      const val = parseInt(cell.value, 10);
-      const index = pointToIndex(i, j, edgeSize)
-      if (val > 0) {
-        view[index] = val;
-      } else {
-        view[index] = -1;
-      }
+  for (let i = 0; i < edgeSize ** 2; ++i) {
+    const cell = boardElement.children[i] as HTMLInputElement;
+    const val = parseInt(cell.value, 10);
+    if (val > 0) {
+      view[i] = val;
+    } else {
+      view[i] = -1;
     }
   }
   return buffer;
@@ -91,13 +89,9 @@ function putBoard(board: ArrayBuffer, edgeSize: number) {
   const arrayConstructor = minSizeArray(boxSize, () => true);
   const bufferSize = arrayConstructor.BYTES_PER_ELEMENT * (edgeSize ** 2);
   const boardView = new arrayConstructor(board, 0, edgeSize ** 2);
-  for (let i = 0; i < edgeSize; ++i) {
-    let tr = table.rows[i];
-    for (let j = 0; j < edgeSize; ++j) {
-      let cell = tr.cells[j].children[0] as HTMLInputElement;
-      const boardIndex = pointToIndex(i, j, edgeSize);
-      cell.value = boardView[boardIndex]?.toString() ?? '';
-    }
+  for (let i = 0; i < edgeSize ** 2; ++i) {
+    const cell = boardElement.children[i] as HTMLInputElement;
+    cell.value = boardView[i]?.toString() ?? '';
   }
 }
 

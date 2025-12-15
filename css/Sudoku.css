@@ -1,15 +1,79 @@
-table {
-  border: 2px solid black;
-  box-sizing: border-box;
-  border-collapse: collapse;
-  padding: 20px;
+body {
+  display: flex;
+  margin: 10px;
+  overflow-x: clip;
+  flex-direction: column;
 }
-td {
-  border: 0px solid black;
+
+noscript {
+  background-color: #640606;
+  color: #f0dabf;
+
+  margin-top: -10px;
+  margin-left: -10px;
+  margin-right: -10px;
+  height: fit-content;
+  font-family: Arial;
+  font-weight: bold;
   text-align: center;
-  width: 50px;
-  height: 50px;
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
+
+.content { 
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+@media screen and (max-width: 650px) {
+  .content {
+    flex-direction: column;
+  }
+}
+
+#board {
+  aspect-ratio: 1 / 1;
+
+  display: grid;
+  grid-template-columns: repeat(var(--edgeSize), 1fr);
+  grid-template-rows: repeat(var(--edgeSize), 1fr);
+
+  gap: 1px;
+
+  container-type: inline-size;
+}
+
+input {
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  font-size: calc(100cqi / var(--edgeSize));
+  border: none;
+  box-sizing: border-box;
+  font-weight: 700;
+  overflow: clip;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media screen and (max-width: 650px) {
+  .actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  hr {
+    display: none;
+  }
+} 
+
 button, select, label {
   cursor: pointer;
   font-size: large;
@@ -28,15 +92,6 @@ label {
   width: 146px;
   padding: 10px 0px 10px 0px;
 }
-input {
-  width: 49px;
-  height: 49px;
-  text-align: center;
-  font-size: 40px;
-  background: white;
-  border: 0px;
-  font-weight: 700;
-}
 .lcb {
   display: none;
   width: 0px;
@@ -45,21 +100,10 @@ input {
 .lb1 {
   text-decoration: line-through;
 }
-body {
-  display: flex;
-  margin: 10px;
-}
-.actions {
-  display: flex;
-  flex-direction: column;
-}
-.actions > button, label, select {
-  margin-bottom: 10px;
-  margin-left: 10px;
-}
+
 hr {
-  margin-left: 10px;
   margin-top: 0px;
+  margin-bottom: 0px;
   width: 150px;
   border-left: 0px;
   border-right: 0px;
