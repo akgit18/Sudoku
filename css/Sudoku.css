@@ -42,6 +42,9 @@ noscript {
   gap: 1px;
 
   container-type: inline-size;
+
+  width: 100%;
+  max-width: calc(100vh - 20px);
 }
 
 input {
