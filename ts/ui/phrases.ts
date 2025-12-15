@@ -1,10 +1,12 @@
+import { onLoadPromise } from "./ui"
+
 declare const Translator: Translator
 // https://developer.mozilla.org/en-US/docs/Web/API/Translator/
 type Translator = {
     /** https://developer.mozilla.org/en-US/docs/Web/API/Translator/availability_static */
     availability(options: {sourceLanguage: string, targetLanguage: string}): Promise<'available' | 'downloadable' | 'downloading' | 'unavailable'>
     /** https://developer.mozilla.org/en-US/docs/Web/API/Translator/create_static */
-    create(options: {sourceLanguage: string, targetLanguage: string, monitor?: (...args: unknown[]) => unknown, signal?: AbortSignal}): TranslatorInstance
+    create(options: {sourceLanguage: string, targetLanguage: string, monitor?: (...args: unknown[]) => unknown, signal?: AbortSignal}): Promise<TranslatorInstance>
 }
 
 type TranslatorInstance = {
@@ -38,8 +40,23 @@ async function findTargetLanguage(): Promise<string | undefined> {
         }
         try {
             const availability = await Translator.availability({sourceLanguage: 'en', targetLanguage: normalizedLanguage});
-            if (availability !== 'unavailable') {
-                return normalizedLanguage;
+            switch(availability) {
+                case "unavailable":
+                    break;
+                case "downloadable":
+                case "downloading":
+                    // if ("confirm" in self && confirm(`Allow downloading language translation pack for ${normalizedLanguage}?`)) {
+                    //     return normalizedLanguage;
+                    // } else {
+                    //     console.log("Did not accept translation");
+                    //     break;
+                    // }
+
+                    // TODO: modal to accept translation showing, since apparently `confirm` is not user activity
+                    console.log(`Please finish downloading the ${normalizedLanguage} translation pack and reload.`);
+                    break;
+                case "available":
+                    return normalizedLanguage;
             }
         } catch {
             continue;
@@ -91,7 +108,7 @@ async function translateWithNewTranslator(s: string, retriesRemaining: number): 
     }
 
     try {
-        translator = Translator.create({sourceLanguage: 'en', targetLanguage});
+        translator = await Translator.create({sourceLanguage: 'en', targetLanguage});
         return translateWithExistingTranslator(s, translator, retriesRemaining);
     } catch (e) {
         if (e instanceof DOMException) {
@@ -134,11 +151,10 @@ const phrases: Record<string, string> = {
 }
 
 if (tryTranslator) {
-    document.body.addEventListener("load", async () => {
-        console.log("load event listened");
+    onLoadPromise.then(async () => {
         for (const key in phrases) {
             phrases[key] = await translate(phrases[key]);
         }
         console.log("translated phrases: ", phrases);
-    })
+    });
 }

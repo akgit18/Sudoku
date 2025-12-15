@@ -139,8 +139,9 @@ function solveBoard() {
   worker.postMessage(message, [board])
 }
 
+export const onLoadPromise = new Promise((resolve) => document.body.onload = resolve);
 // setup board + onclick/onchange functions
-document.body.onload = () => {
+onLoadPromise.then(() => {
   createBoard();
   (document.getElementById('cboard') as HTMLButtonElement).onclick = () => boardClear();
   (document.getElementById('sboard') as HTMLButtonElement).onclick = () => solveBoard();
@@ -180,4 +181,4 @@ document.body.onload = () => {
   for (const toggleable of (document.getElementsByClassName('lb1') as HTMLCollectionOf<HTMLLabelElement>)) {
     toggleable.onchange = () => toggleRule(toggleable, toggleable.children[0] as HTMLInputElement);
   }
-}
+});
