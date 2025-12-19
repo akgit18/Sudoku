@@ -43,9 +43,9 @@ compile_all_ts() {
     --chunk="ui:${num_ui_files}:common" ${ui_files[@]} \
     --chunk="solver:${num_solver_files}:common:${repo_root}/dist/bolver/dolver.min.js" ${solver_files[@]} $debug
 
-    google-closure-compiler -O SIMPLE --module_resolution=NODE --externs ts/ui/externs.js --create_source_map "%outname%.map" --source_map_input "intermediate/common.js|intermediate/common.js.map" --source_map_input "intermediate/ui.js|intermediate/ui.js.map" --output_wrapper "%output%//# sourceMappingURL=ui.min.mjs.map" --chunk_output_type=ES_MODULES intermediate/common.js intermediate/ui.js --js_output_file dist/ui/ui.min.mjs $debug
+    google-closure-compiler -O SIMPLE --module_resolution=NODE --externs ts/ui/externs.js --create_source_map "%outname%.map" --source_map_input "intermediate/common.js|intermediate/common.js.map" --source_map_input "intermediate/ui.js|intermediate/ui.js.map" --source_map_location_mapping "/ts/|../../ts/" --output_wrapper "%output%//# sourceMappingURL=ui.min.mjs.map" --chunk_output_type=ES_MODULES intermediate/common.js intermediate/ui.js --js_output_file dist/ui/ui.min.mjs $debug
 
-    google-closure-compiler -O SIMPLE --module_resolution=NODE --create_source_map "%outname%.map" --source_map_input "intermediate/common.js|intermediate/common.js.map" --source_map_input "intermediate/solver.js|intermediate/solver.js.map" --output_wrapper "%output%//# sourceMappingURL=solver.min.mjs.map" --chunk_output_type=ES_MODULES intermediate/common.js intermediate/solver.js --js_output_file dist/solver/solver.min.mjs $debug
+    google-closure-compiler -O SIMPLE --module_resolution=NODE --create_source_map "%outname%.map" --source_map_input "intermediate/common.js|intermediate/common.js.map" --source_map_input "intermediate/solver.js|intermediate/solver.js.map" --source_map_location_mapping "/ts/|../../ts/" --output_wrapper "%output%//# sourceMappingURL=solver.min.mjs.map" --chunk_output_type=ES_MODULES intermediate/common.js intermediate/solver.js --js_output_file dist/solver/solver.min.mjs $debug
 
     echo -e "\033[34mClosure compilation done\033[0m"
 }
