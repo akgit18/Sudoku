@@ -8,6 +8,8 @@
     "rootDir": ".",
     "strict": true,
     "composite": true,
+    "sourceMap": true,
+    "inlineSources": false,
     "paths": {
       "@common": ["./common/*.ts"],
     },
