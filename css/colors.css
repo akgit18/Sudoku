@@ -3,7 +3,7 @@
     color: var(--color-2);
 }
 
-.col2 {
+.col2, label:has(input:checked) {
     background-color: var(--color-2);
     color: var(--color-1);
 }

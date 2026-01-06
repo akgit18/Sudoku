@@ -102,8 +102,10 @@ label {
   width: 0px;
   height: 0px;
 }
-.lb1 {
+
+label:has(input:not(:checked)) {
   text-decoration: line-through;
+  text-decoration-thickness: 3px;
 }
 
 hr {

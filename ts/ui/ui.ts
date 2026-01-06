@@ -50,12 +50,6 @@ function boardClear() {
   }
 }
 
-/*
-function reTheme(theme) {
-  theme = t.options[t.selectedIndex].value;
-  document.getElementById("themesheet").href = theme;
-}*/
-
 function reSize(selector: HTMLSelectElement, val: string) {
   if (confirm("Are you sure? This will erase any data you have currently entered.")) {
     boxSizeGlobal = parseInt(val, 10);
@@ -65,7 +59,6 @@ function reSize(selector: HTMLSelectElement, val: string) {
   }
 }
 
-// const worker = new Worker('../solver/solver.js')
 function getBoardAsArrayBuffer(boxSize: number): ArrayBuffer {
   const arrayConstructor = minSizeArray(boxSize, confirm);
   const edgeSize = boxSize ** 2;
@@ -124,14 +117,6 @@ function getRulesAsBits(): number {
   
 // }
 
-function toggleRule(label: HTMLLabelElement, checkbox: HTMLInputElement) {
-  if (checkbox.checked) {
-    label.className="col2";
-  } else {
-    label.className="lb1";
-  }
-}
-
 function solveBoard() {
   const board = getBoardAsArrayBuffer(boxSizeGlobal);
   const rules = getRulesAsBits();
@@ -179,7 +164,4 @@ onLoadPromise.then(() => {
   sz.onchange = () => reSize(sz, sz.value);
   const theme = document.getElementById('theme') as HTMLSelectElement;
   theme.onchange = () => document.documentElement.setAttribute('data-theme', theme.value)
-  for (const toggleable of (document.getElementsByClassName('lb1') as HTMLCollectionOf<HTMLLabelElement>)) {
-    toggleable.onchange = () => toggleRule(toggleable, toggleable.children[0] as HTMLInputElement);
-  }
 });
