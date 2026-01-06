@@ -2,10 +2,8 @@ export type Point = [number, number];
 export type TypedUintArrayConstructor = Uint8ArrayConstructor | Uint16ArrayConstructor | Uint32ArrayConstructor; // | BigUint64ArrayConstructor;
 export type TypedUintArray = InstanceType<TypedUintArrayConstructor>;
 export const MessageTypes = {
-    SetSolverMethod: 1,
-    ToggleRule: 2,
-    SolveBoard: 3,
-    AbortSolve: 4,
+    SolveBoard: 1,
+    AbortSolve: 2,
 
     ShowBoard: -1,
     SolveError: -2,
@@ -15,25 +13,24 @@ export const SolverType = {
     LocalSearch: "2",
     DLX: "3",
 } as const;
+export type SolverValue = typeof SolverType[keyof typeof SolverType]
 export const RuleType = {
-    Knightsmove: "1",
-    Kingsmove: "2",
-    Orthoplus: "3",
+  RowColumn: 1 << 0,
+  Box: 1 << 1,
+  // keep shift amount in sync with html element values
+  Knightsmove: 1 << 2,
+  Kingsmove: 1 << 3,
+  Orthoplus: 1 << 4,
+  // TODO: if extensible rules becomes a thing, maybe use bigint for 32 or more rules
 } as const;
-export type RuleValue = typeof RuleType[keyof typeof RuleType]
+export type RuleValue = typeof RuleType[keyof typeof RuleType];
 export const MessageKeys = {
     Type: "t",
     Data: "d",
 } as const;
 export type MessageToWorker = {
-    type: typeof MessageTypes.SetSolverMethod,
-    data: string,
-} | {
-    type: typeof MessageTypes.ToggleRule,
-    data: RuleValue,
-} | {
     type: typeof MessageTypes.SolveBoard,
-    data: {boxSize: number, board: ArrayBuffer},
+    data: {boxSize: number, board: ArrayBuffer, rules: number, method: SolverValue},
 } | {
     type: typeof MessageTypes.AbortSolve,
     data: never,

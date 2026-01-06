@@ -34,14 +34,14 @@
           <option type="number" value="4">4</option>
           <!-- <option type="number" value="5">5</option> -->
         </select>
-        <select title="The solving method. Backtracking is recommended; Local Search may take a much longer time." name="Solver" id="Solver">
-          <option value="backtracking" selected="selected">Backtracking</option>
-          <option value="localSearch">Local Search</option>
+        <select title="The solving method. Backtracking is recommended; Local Search may take a much longer time." name="method" id="method">
+          <option value="1" selected="selected">Backtracking</option>
+          <option value="2">Local Search</option>
         </select>
         <hr>
-        <label title="Squares within a chess knight's move of each other cannot be the same number." class="lb1"><input value="1" type="checkbox" class="lcb">Knightsmove</label>
-        <label title="Squares within a chess king's move of each other cannot be the same number." class="lb1"><input value="2" type="checkbox" class="lcb">Kingsmove</label>
-        <label title="Squares cannot be +1 or -1 from any orthogonally adjacent square." class="lb1"><input value="3" type="checkbox" class="lcb">Orthoplus</label>
+        <label title="Squares within a chess knight's move of each other cannot be the same number." class="lb1"><input value="2" type="checkbox" class="lcb">Knightsmove</label>
+        <label title="Squares within a chess king's move of each other cannot be the same number." class="lb1"><input value="3" type="checkbox" class="lcb">Kingsmove</label>
+        <label title="Squares cannot be +1 or -1 from any orthogonally adjacent square." class="lb1"><input value="4" type="checkbox" class="lcb">Orthoplus</label>
       </div>
     </div>
     <script type="module" src="./dist/ui/ui.min.mjs" charset="utf-8"></script>

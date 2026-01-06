@@ -1,9 +1,9 @@
-import type {MessageFromWorker, TypedUintArray} from "../common/common";
+import type {MessageFromWorker, SolverValue, TypedUintArray} from "../common/common";
 import {MessageTypes, MessageToWorker, minSizeArray} from "../common/common";
 import { backtracking } from "./backtracking";
 import { isLegalAll, nextEmptySpace } from "./legality";
 import { localSearch } from "./localsearch";
-import { toggleRule } from "./rules";
+import { Rule, allRules } from "./rules";
 
 // TODO: abort controller to abort solves
 // const aborter = new AbortController();
@@ -13,16 +13,9 @@ if (self instanceof WorkerGlobalScope) {
     try {
       const data = e.data;
       switch (data.type) {
-        case MessageTypes.SetSolverMethod:
-          const solverMethod = data.data
-          useSolver(solverMethod);
-          break;
-        case MessageTypes.ToggleRule:
-          toggleRule(data.data);
-          break;
         case MessageTypes.SolveBoard:
-          const {board, boxSize} = data.data;
-          attemptSolve(board, boxSize);
+          const {boxSize, board, rules, method} = data.data;
+          attemptSolve(board, boxSize, rules, method);
           break;
         case MessageTypes.AbortSolve:
           break;
@@ -55,19 +48,23 @@ function sendBoard(boardRef: Readonly<ArrayBuffer>, edgeSize: number, solveMs: n
   self.postMessage(message, [boardRef]);
 }
 
-//solves the board (table), then puts the board (array) into the HTML table
-let solver = (board: TypedUintArray, i: number, j: number, edgeSize: number) => backtracking(board, i, j, edgeSize)
-function attemptSolve(board: ArrayBuffer, boxSize: number) {
+type Solver = (board: TypedUintArray, i: number, j: number, edgeSize: number, rules: Rule[]) => boolean;
+
+function attemptSolve(board: ArrayBuffer, boxSize: number, rules: number, method: SolverValue) {
+  const solver = getSolver(method);
+  const ruleFuncs = getActiveRules(rules);
+
   const edgeSize = boxSize ** 2;
   const arrayConstructor = minSizeArray(boxSize, () => true);
   const boardView = new arrayConstructor(board, 0, edgeSize ** 2);
-  if (!isLegalAll(boardView, edgeSize, undefined)) {
+
+  if (!isLegalAll(boardView, edgeSize, ruleFuncs, undefined)) {
     throw new Error("Inputted board not valid.");
   }
   const sq = nextEmptySpace(boardView, edgeSize);
   if (sq) {
     const tic = Date.now();
-    let solved = solver(boardView, sq[0], sq[1], edgeSize);
+    let solved = solver(boardView, sq[0], sq[1], edgeSize, ruleFuncs);
     const toc = Date.now() - tic;
     if (!solved) {
       throw new Error("Unsolvable board.");
@@ -79,20 +76,25 @@ function attemptSolve(board: ArrayBuffer, boxSize: number) {
   }
 }
 
-function useSolver(s: string) {
+function getSolver(s: SolverValue): Solver {
   switch (s) {
     case "1":
-    case "backtracking":
-      solver = backtracking;
-      break;
+      return backtracking;
     case "2":
-    case "localSearch":
-      solver = localSearch;
-      break;
+      return localSearch;
     case "3":
-    case "DLX":
-      break;
+      throw new Error("DLX is not yet implemented.");
     default:
       throw new Error(`${s} is not a supported solving method!`);
   }
+}
+
+function getActiveRules(ruleFlags: number): Rule[] {
+  const rules: Rule[] = [];
+  for (const [flag, rule] of allRules) {
+    if (ruleFlags & flag) {
+      rules.push(rule);
+    }
+  }
+  return rules;
 }

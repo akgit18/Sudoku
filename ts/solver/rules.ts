@@ -1,7 +1,7 @@
 import { pointToIndex, RuleType, RuleValue, TypedUintArray } from "../common/common";
 
 /** @returns whether the rule is satisfied */
-type Rule = (board: Readonly<TypedUintArray>, i: number, j: number, edgeSize: number, val: number) => boolean
+export type Rule = (board: Readonly<TypedUintArray>, i: number, j: number, edgeSize: number, val: number) => boolean
 
 function rowcolumn(board: Readonly<TypedUintArray>, i: number, j: number, edgeSize: number, val: number): boolean {
   for (let k = 0; k < edgeSize; ++k) {
@@ -79,27 +79,10 @@ function orthoplus(board: Readonly<TypedUintArray>, i: number, j: number, edgeSi
     return true;
 }
 
-export const rules: Rule[] = [rowcolumn, boxrule]; //active rules
-
-export function ruleNumberToRule(ruleNumber: RuleValue): Rule {
-    switch (ruleNumber) {
-      case RuleType.Knightsmove:
-        return knightsmove;
-      case RuleType.Kingsmove:
-        return kingsmove;
-      case RuleType.Orthoplus:
-        return orthoplus;
-      default:
-        throw new Error("Attempting to toggle unknown rule");
-    }
-  }
-  
-export function toggleRule(ruleNumber: RuleValue) {
-    const rule = ruleNumberToRule(ruleNumber);
-    const index = rules.indexOf(rule);
-    if (index === -1) {
-        rules.push(rule);
-    } else {
-        rules.splice(index, 1);
-    }
-}
+export const allRules: [RuleValue, Rule][] = [
+  [RuleType.RowColumn, rowcolumn],
+  [RuleType.Box, boxrule],
+  [RuleType.Knightsmove, knightsmove], 
+  [RuleType.Kingsmove, kingsmove],
+  [RuleType.Orthoplus, orthoplus],
+];

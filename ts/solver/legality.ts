@@ -1,20 +1,20 @@
-import {rules} from './rules';
 import type {Point, TypedUintArray} from '../common/common';
 import {maxValueOfTypedArray, pointToIndex} from '../common/common';
+import { Rule } from './rules';
 
 //is the whole board legal?
-export function isLegalAll(board: Readonly<TypedUintArray>, edgeSize: number, sqList: undefined | number[][]) {
+export function isLegalAll(board: Readonly<TypedUintArray>, edgeSize: number, rules: Rule[], sqList: undefined | number[][]) {
     if (!sqList) {
       for (let i = 0; i < edgeSize; i++) {
         for (let j = 0; j < edgeSize; j++) {
-          if (!isLegalSpace(board, i, j, edgeSize)) {
+          if (!isLegalSpace(board, i, j, edgeSize, rules)) {
             return false;
           }
         }
       }
     } else {
       for (const sq of sqList) {
-        if (!isLegalSpace(board, sq[0], sq[1], edgeSize)) {
+        if (!isLegalSpace(board, sq[0], sq[1], edgeSize, rules)) {
           return false;
         }
       }
@@ -23,29 +23,13 @@ export function isLegalAll(board: Readonly<TypedUintArray>, edgeSize: number, sq
   }
   
 //is the number on i, j legal?
-export function isLegalSpace(board: TypedUintArray, i: number, j: number, edgeSize: number) {
+export function isLegalSpace(board: TypedUintArray, i: number, j: number, edgeSize: number, rules: Rule[]) {
     const index = pointToIndex(i, j, edgeSize);
     const val = board[index];
     if (val !== maxValueOfTypedArray[board.BYTES_PER_ELEMENT]) {
       if (val > edgeSize) {
         throw new Error(`Value ${val} on row ${i+1}, column ${j+1} too large.`);
       }
-      /*for (k = 0; k < (_size * _size); k++) {
-        if (((val == board[k][j]) && k != i) || ((val == board[i][k])) && k != j) {
-          return false;
-        }
-      }
-      let iFloor = Math.floor(i/_size) * _size;
-      let jFloor = Math.floor(j/_size) * _size;
-      for (m = 0; m < _size; m++) {
-        for (n = 0; n < _size; n++) {
-          if ((m + iFloor != i) || (n + jFloor != j)) {
-            if (board[m + iFloor][n + jFloor] == board[i][j]) {
-              return false;
-            }
-          }
-        }
-      }*/
       for (const rule of rules) {
         if (!rule(board, i, j, edgeSize, val)) {
           return false;

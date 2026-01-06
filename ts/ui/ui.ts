@@ -1,4 +1,4 @@
-import type {MessageFromWorker, MessageToWorker, RuleValue, TypedUintArray} from "../common/common";
+import type {MessageFromWorker, MessageToWorker, SolverValue, TypedUintArray} from "../common/common";
 import {MessageTypes, minSizeArray} from "../common/common";
 
 if (!self.Worker) {
@@ -96,6 +96,18 @@ function putBoard(board: ArrayBuffer, edgeSize: number) {
   }
 }
 
+function getRulesAsBits(): number {
+  const ruleInputs = document.getElementsByClassName('lcb') as HTMLCollectionOf<HTMLInputElement>;
+  let ruleFlags = 0b11; // RowColumn & Box
+  for (const rule of ruleInputs) {
+    if (rule.checked) {
+      const shiftDist = parseInt(rule.value, 10);
+      ruleFlags |= 1 << shiftDist;
+    }
+  }
+  return ruleFlags;
+}
+
 // function generateBoard() {
 //   const starterboard = [];
 //   const row = [];
@@ -112,25 +124,19 @@ function putBoard(board: ArrayBuffer, edgeSize: number) {
   
 // }
 
-function changeSolver(value: string) {
-  const message: MessageToWorker = {type: MessageTypes.SetSolverMethod, data: value}
-  worker.postMessage(message);
-}
-
 function toggleRule(label: HTMLLabelElement, checkbox: HTMLInputElement) {
-  const val = checkbox.value as RuleValue;
   if (checkbox.checked) {
     label.className="col2";
   } else {
     label.className="lb1";
   }
-  const message: MessageToWorker = {type: MessageTypes.ToggleRule, data: val}
-  worker.postMessage(message)
 }
 
 function solveBoard() {
   const board = getBoardAsArrayBuffer(boxSizeGlobal);
-  const message: MessageToWorker = {type: MessageTypes.SolveBoard, data: {boxSize: boxSizeGlobal, board: board}}
+  const rules = getRulesAsBits();
+  const method = (document.getElementById('method') as HTMLSelectElement).value as SolverValue;
+  const message: MessageToWorker = {type: MessageTypes.SolveBoard, data: {boxSize: boxSizeGlobal, board, rules, method}}
   worker.postMessage(message, [board])
 }
 
@@ -171,8 +177,6 @@ onLoadPromise.then(() => {
 
   const sz = document.getElementById('Size') as HTMLSelectElement;
   sz.onchange = () => reSize(sz, sz.value);
-  const solver = document.getElementById('Solver') as HTMLSelectElement;
-  solver.onchange = () => changeSolver(solver.value);
   for (const toggleable of (document.getElementsByClassName('lb1') as HTMLCollectionOf<HTMLLabelElement>)) {
     toggleable.onchange = () => toggleRule(toggleable, toggleable.children[0] as HTMLInputElement);
   }

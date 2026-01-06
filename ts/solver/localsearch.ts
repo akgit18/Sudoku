@@ -1,9 +1,10 @@
 import { Point, pointToIndex, TypedUintArray } from "../common/common";
 import { isLegalAll, minViolatingOption, nextEmptySpace, numViolationsSpace } from "./legality";
+import { Rule } from "./rules";
 
 // solves a 2-d Sudoku array (local search method)
 // not guaranteed to work
-export function localSearch(board: TypedUintArray, i: number, j: number, edgeSize: number) {
+export function localSearch(board: TypedUintArray, i: number, j: number, edgeSize: number, rules: Rule[]) {
     //let oBoard = getBoard();
     //let numVboard = [];
     // setTimeout(function(){
@@ -34,7 +35,7 @@ export function localSearch(board: TypedUintArray, i: number, j: number, edgeSiz
         if (numViols = numViolationsSpace(board, edgeSize, rsq[0], rsq[1], pointVal)){
             board[index] = minViolatingOption(board, edgeSize, rsq[0], rsq[1]);
         }
-        if(isLegalAll(board, edgeSize, newSqList)) {
+        if(isLegalAll(board, edgeSize, rules, newSqList)) {
             return true;
         }
     }
