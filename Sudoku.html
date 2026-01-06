@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr" data-theme="system">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
     <title>Sudoku</title>
-    <link rel="stylesheet" href="./css/Sudoku.css">
-    <link id="themesheet" rel="stylesheet" title="theme" href="./css/system.css">
+    <link rel="stylesheet" href="./css/layout.css">
+    <link rel="stylesheet" href="./css/colors.css">
   </head>
   <body>
     <noscript>
@@ -22,11 +22,11 @@
           Clear
         </button>
         <hr>
-        <select title="The theme." name="Theme" id="Theme" onChange="document.getElementById('themesheet').href = this.value;">
-          <option value="./css/system.css" selected="selected">Auto</option>
-          <option value="./css/light.css">Light</option>
-          <option value="./css/dark.css">Dark</option>
-          <option value="./css/pumpkin.css">Pumpkin</option>
+        <select title="The theme." name="Theme" id="theme">
+          <option value="system" selected="selected">Auto</option>
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+          <option value="pumpkin">Pumpkin</option>
         </select>
         <select title="The dimension of each box, or the square root of the dimensions of the whole board. Boards of size 4 with additional rules active may take noticeably long times to solve." name="Size" id="Size">
           <option type="number" value="2">2</option>
@@ -45,7 +45,5 @@
       </div>
     </div>
     <script type="module" src="./dist/ui/ui.min.mjs" charset="utf-8"></script>
-    <!-- <script type="text/javascript" src="./dist/solver/solver.min.js" charset="utf-8"></script> -->
-    <!-- <script type="text/javascript" src="./JS/Sudoku.min.js" charset="utf-8"></script> -->
   </body>
 </html>

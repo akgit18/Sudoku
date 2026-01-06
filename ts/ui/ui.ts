@@ -177,6 +177,8 @@ onLoadPromise.then(() => {
 
   const sz = document.getElementById('Size') as HTMLSelectElement;
   sz.onchange = () => reSize(sz, sz.value);
+  const theme = document.getElementById('theme') as HTMLSelectElement;
+  theme.onchange = () => document.documentElement.setAttribute('data-theme', theme.value)
   for (const toggleable of (document.getElementsByClassName('lb1') as HTMLCollectionOf<HTMLLabelElement>)) {
     toggleable.onchange = () => toggleRule(toggleable, toggleable.children[0] as HTMLInputElement);
   }
